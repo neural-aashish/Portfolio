@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Aashish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#0a0a0a;--white:#f5f4f0;--gray:#9a9a9a;--accent:#e8b84b;
+  --font-display:'Bebas Neue',sans-serif;--font-body:'DM Sans',sans-serif;--font-mono:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--white);color:var(--black);font-family:var(--font-body);overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+#cursor{width:12px;height:12px;background:var(--gray);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
+#cursor-ring{width:36px;height:36px;border:1.5px solid var(--gray);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:left 0.08s ease,top 0.08s ease;mix-blend-mode:difference;}
+body.cursor-big #cursor{transform:scale(3);}
+
+/* POP RIPPLE */
+.pop-ripple{position:fixed;width:24px;height:24px;border-radius:50%;border:2px solid var(--accent);pointer-events:none;z-index:9997;transform:translate(-50%,-50%) scale(0);animation:popRipple 0.4s ease-out forwards;}
+@keyframes popRipple{0%{transform:translate(-50%,-50%) scale(0);opacity:1;}100%{transform:translate(-50%,-50%) scale(4);opacity:0;}}
+
+/* PAGE TRANSITION */
+#page-transition{position:fixed;inset:0;z-index:9000;pointer-events:none;}
+.transition-block{position:absolute;inset:0;background:var(--black);transform:scaleY(0);transform-origin:bottom;transition:transform 0.5s cubic-bezier(0.76,0,0.24,1);}
+#page-transition.active .transition-block{transform:scaleY(1);pointer-events:all;}
+#page-transition.out .transition-block{transform-origin:top;transform:scaleY(0);}
+
+/* TICKER */
+.ticker-wrap{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;overflow:hidden;}
+.ticker-left,.ticker-right{position:absolute;white-space:nowrap;font-family:var(--font-mono);font-size:11px;color:rgba(0,0,0,0.12);letter-spacing:0.04em;top:0;height:200%;}
+.ticker-left{left:16px;animation:scrollUp 22s linear infinite;writing-mode:vertical-rl;}
+.ticker-right{right:16px;animation:scrollDown 22s linear infinite;writing-mode:vertical-rl;}
+@keyframes scrollUp{from{transform:translateY(0);}to{transform:translateY(-50%);}}
+@keyframes scrollDown{from{transform:translateY(-50%);}to{transform:translateY(0);}}
+
+/* NAV */
+nav{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);z-index:100;background:var(--black);border-radius:50px;padding:0.65rem 1rem;display:flex;align-items:center;gap:0.25rem;box-shadow:0 8px 40px rgba(0,0,0,0.25);}
+nav .home-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin-right:0.5rem;border:none;cursor:none;color:white;font-size:16px;transition:background 0.2s;}
+nav .home-btn:hover{background:rgba(255,255,255,0.2);}
+nav a{color:rgba(255,255,255,0.7);text-decoration:none;font-family:var(--font-body);font-size:14px;font-weight:400;padding:0.5rem 1rem;border-radius:30px;transition:all 0.2s;cursor:none;}
+nav a:hover{color:white;background:rgba(255,255,255,0.1);}
+.nav-cta{background:white!important;color:var(--black)!important;font-weight:500!important;padding:0.5rem 1.25rem!important;border-radius:30px!important;display:flex!important;align-items:center;gap:6px;margin-left:0.5rem;}
+.nav-cta:hover{background:var(--accent)!important;}
+
+/* HERO */
+section{min-height:100vh;}
+#hero{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start; /* 👈 change */
+  align-items:center;
+  padding-top:200px; /* 👈 main control */
+}
+.dot-bg{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,0.08) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.vishwa-hero{
+  padding:120px 2rem 80px;
+  max-width:1100px;
+  margin:0 auto;
+  position:relative;
+}
+
+.top-line{
+  font-size:18px;
+  color:#6b6b6b;
+  margin-bottom:1rem;
+}
+
+.main-heading{
+  font-size:clamp(48px,6vw,90px);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-1px;
+  margin-bottom:1rem;
+}
+
+.sub-text{
+  font-size:20px;
+  color:#555;
+  max-width:800px;
+  margin-bottom:2rem;
+}
+
+/* TAGS */
+.floating-tags{
+  position:relative;
+  height:80px;
+}
+
+.tag{
+  position:absolute;
+  padding:8px 14px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:500;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  transform:rotate(-3deg);
+}
+
+/* exact placement */
+.tag-yellow{top:10px; left:140px; background:#ffe8a3;}
+.tag-purple{top:-20px; left:360px; background:#e9d5ff;}
+.tag-pink{top:30px; left:480px; background:#ffc0cb;}
+.tag-green{top:50px; left:260px; background:#d1fae5;}
+
+/* TERMINAL */
+.terminal-box{
+  margin-top:40px;
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 30px 80px rgba(0,0,0,0.1);
+}
+
+.terminal-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  background:#f3f3f3;
+}
+
+.dots span{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
+}
+
+.dots span:nth-child(1){background:#ff5f56;}
+.dots span:nth-child(2){background:#ffbd2e;}
+.dots span:nth-child(3){background:#27c93f;}
+
+.term-title{
+  font-size:14px;
+  color:#555;
+}
+
+.moon{
+  font-size:14px;
+}
+
+.terminal-content{
+  padding:18px;
+  font-family:'Space Mono', monospace;
+  font-size:14px;
+}
+
+.fade{color:#888; margin-bottom:8px;}
+.user{color:#22c55e;}
+.bot{color:#3b82f6;}
+.hero-logo{position:absolute;top:2rem;left:2rem;display:flex;align-items:center;gap:0.5rem;font-family:var(--font-body);font-weight:500;font-size:15px;z-index:10;cursor:none;}
+.wave{font-size:22px;animation:waveAnim 2s infinite;display:inline-block;transform-origin:bottom right;}
+@keyframes waveAnim{0%,100%{transform:rotate(0deg);}15%{transform:rotate(20deg);}30%{transform:rotate(-10deg);}45%{transform:rotate(15deg);}60%{transform:rotate(-5deg);}}
+.logo-text{color:var(--accent);font-size:15px;transition:all 0.2s;}
+.hello-en{display:inline;}
+.hello-hi{display:none;}
+.hero-logo:hover .hello-en{display:none;}
+.hero-logo:hover .hello-hi{display:inline;}
+.hero-logo:hover .wave{animation:none;transform:rotate(10deg);}
+
+/* SOCIAL BAR */
+.hero-social{position:absolute;top:2rem;right:2rem;display:flex;align-items:center;gap:1rem;z-index:10;}
+.hero-social a{color:var(--black);text-decoration:none;font-size:17px;opacity:0.7;transition:opacity 0.2s;cursor:none;display:flex;align-items:center;}
+.hero-social a:hover{opacity:1;}
+.hero-clock{font-family:var(--font-mono);font-size:13px;color:var(--black);opacity:0.7;line-height:1.3;}
+
+/* MUSIC */
+.music-wrapper{position:relative;}
+.music-btn{background:none;border:none;font-size:19px;cursor:none;opacity:0.7;transition:opacity 0.2s;padding:2px 4px;}
+.music-btn:hover{opacity:1;}
+.music-menu{position:absolute;top:calc(100% + 14px);right:0;background:#11111100;border-radius:18px;padding:0.75rem;display:none;flex-direction:column;gap:0.4rem;min-width:230px;z-index:500;box-shadow:0 16px 48px rgba(0,0,0,0.4);}
+.music-menu.open{display:flex;}
+.music-option{display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0.75rem;border-radius:12px;color:white;text-decoration:none;font-size:13px;font-family:var(--font-body);transition:background 0.2s;cursor:none;border:none;background:none;width:100%;text-align:left;}
+.music-option:hover{background:rgb(255, 255, 255);}
+.music-icon{font-size:20px;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.music-label b{font-weight:500;font-size:13px;display:block;}
+.music-label small{font-size:11px;opacity:0.45;}
+.spotify-link{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:0.3rem;padding:0.55rem;border-radius:10px;background:#1DB954;color:white;font-size:12px;font-weight:500;text-decoration:none;cursor:none;transition:opacity 0.2s;}
+.spotify-link:hover{opacity:0.85;}
+
+/* HERO NAME */
+.hero-name{text-align:center;line-height:0.88;position:relative;z-index:5;}
+.line1{font-family:var(--font-display);font-size:clamp(80px,16vw,200px);color:var(--black);letter-spacing:-0.01em;display:flex;justify-content:center;animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.1s;}
+.letter{display:inline-block;transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1),color 0.15s;cursor:none;}
+.letter:hover{transform:translateY(-10px) rotate(-4deg) scale(1.2);color:var(--accent);}
+
+.line2-outer{font-size:clamp(80px,16vw,200px);color:var(--gray);letter-spacing:-0.01em;display:flex;
+  justify-content:center;
+  align-items:center;animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.25s;position:relative;margin-top:-10px;}
+.lang-word{font-family:var(--font-display);position:absolute;left:50%;top:0;transform:translateX(-50%) translateY(20px);width:max-content;opacity:0;transition:opacity 0.45s ease,transform 0.45s ease;pointer-events:none;}
+.lang-word.active{opacity:1;transform:translateX(-50%) translateY(0);}
+.lang-word.exit{opacity:0;transform:translateX(-50%) translateY(-20px);}
+
+/* SPEAKER */
+.speaker-btn{position:absolute;right:-40px;
+  top:-20px;
+  transform:none;;width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(0,0,0,0.18);background:white;display:flex;align-items:center;justify-content:center;cursor:none;font-size:13px;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.speaker-btn:hover{background:var(--black);color:white;border-color:var(--black);}
+.speaker-btn.speaking{background:var(--accent);border-color:var(--accent);animation:pulse 0.6s ease infinite alternate;}
+@keyframes pulse{from{transform:translateY(-50%) scale(1);}to{transform:translateY(-50%) scale(1.15);}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.hero-role{position:absolute;bottom:6rem;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:12px;letter-spacing:0.1em;color:var(--gray);text-transform:uppercase;white-space:nowrap;animation:fadeUp 0.8s ease forwards;opacity:0;animation-delay:0.5s;}
+
+/* PROJECTS */
+#projects{padding:6rem 4rem 4rem;min-height:auto;}
+.section-title{font-family:var(--font-display);font-size:clamp(60px,10vw,120px);line-height:1;margin-bottom:3rem;letter-spacing:-0.02em;}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;}
+.project-card{border:1.5px solid rgba(0,0,0,0.12);border-radius:20px;padding:1.5rem;display:flex;align-items:center;gap:1rem;background:white;text-decoration:none;color:var(--black);transition:all 0.3s ease;cursor:none;position:relative;overflow:hidden;}
+.project-card::after{content:'';position:absolute;inset:0;background:var(--black);transform:scaleY(0);transform-origin:bottom;transition:transform 0.35s cubic-bezier(0.76,0,0.24,1);z-index:0;border-radius:18px;}
+.project-card:hover::after{transform:scaleY(1);}
+.project-card:hover{border-color:var(--black);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.15);}
+.project-card:hover .project-name{color:white;}
+.project-card:hover .project-url{color:var(--accent);}
+.project-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;position:relative;z-index:1;}
+.project-info{flex:1;min-width:0;position:relative;z-index:1;}
+.project-name{font-weight:500;font-size:15px;margin-bottom:3px;transition:color 0.3s;}
+.project-url{font-size:12px;color:#3b7de9;font-family:var(--font-mono);transition:color 0.3s;}
+
+/* EXPERIENCE */
+#experience{padding:6rem 4rem;min-height:auto;}
+.exp-cards{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem;}
+.exp-card{width:280px;height:170px;border-radius:18px;padding:1.5rem;color:white;position:relative;overflow:hidden;flex-shrink:0;transition:transform 0.3s ease,box-shadow 0.3s ease;cursor:none;}
+.exp-card:hover{transform:translateY(-6px) rotate(1deg);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.exp-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.05);}
+.exp-role{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.6;margin-bottom:0.25rem;}
+.exp-title{font-family:var(--font-display);font-size:28px;letter-spacing:0.05em;}
+.exp-meta{position:absolute;bottom:1.25rem;left:1.5rem;right:1.5rem;display:flex;justify-content:space-between;align-items:flex-end;}
+.exp-company-label,.exp-tenure-label{font-size:10px;opacity:0.5;text-transform:uppercase;letter-spacing:0.1em;}
+.exp-tenure-label{text-align:right;}
+.exp-company-name{font-size:14px;font-weight:500;}
+.exp-tenure{font-size:12px;font-family:var(--font-mono);text-align:right;}
+
+/* TESTIMONIALS */
+#testimonials{padding:6rem 4rem;min-height:auto;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;margin-top:1rem;}
+.testimonial-card{border:1.5px solid rgba(0,0,0,0.1);border-radius:20px;padding:1.75rem;background:white;}
+.testimonial-quote{font-size:14px;line-height:1.8;color:#444;margin-bottom:1.5rem;}
+.testimonial-quote::before{content:'"';font-size:40px;line-height:0;vertical-align:-12px;color:var(--accent);margin-right:4px;}
+.testimonial-author{display:flex;align-items:center;gap:0.75rem;}
+.author-avatar{width:40px;height:40px;border-radius:50%;background:var(--black);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:white;flex-shrink:0;}
+.author-name{font-weight:500;font-size:14px;}
+.author-title{font-size:12px;color:var(--gray);}
+
+/* FOOTER */
+footer{padding:4rem;border-top:1px solid rgba(0,0,0,0.08);text-align:center;}
+.footer-connect{font-size:14px;color:var(--gray);margin-bottom:1.5rem;}
+.footer-social{display:flex;justify-content:center;gap:1.5rem;margin-bottom:3rem;}
+.footer-social a{width:44px;height:44px;border:1px solid rgba(0,0,0,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--black);text-decoration:none;font-size:18px;transition:all 0.2s;cursor:none;}
+.footer-social a:hover{background:var(--black);color:white;border-color:var(--black);}
+.footer-marquee{overflow:hidden;border-top:1px solid rgba(0,0,0,0.08);border-bottom:1px solid rgba(0,0,0,0.08);padding:1rem 0;margin-bottom:2rem;}
+.footer-marquee-inner{display:flex;white-space:nowrap;animation:marquee 20s linear infinite;font-size:13px;color:var(--gray);}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.footer-copy{font-family:var(--font-mono);font-size:12px;color:var(--gray);}
+.footer-copy span{color:var(--accent);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+.name-rel{position:relative;display:inline-block;}
+
+@media(max-width:768px){
+  #projects,#experience,#testimonials,footer{padding:4rem 1.5rem;}
+  .exp-card{width:100%;}
+  nav a:not(.nav-cta){display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="page-transition"><div class="transition-block"></div></div>
+
+<!-- NAV -->
+<nav>
+  <button class="home-btn" onclick="navTo('#hero')">⌂</button>
+  <a href="#projects" onclick="navClick(event,'#projects')">Projects</a>
+  <a href="#experience" onclick="navClick(event,'#experience')">Experience</a>
+  <a href="#testimonials" onclick="navClick(event,'#testimonials')">Testimonials</a>
+  <a href="mailto:aashishpandey@example.com" class="nav-cta">Let's talk →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="dot-bg"></div>
+  <div class="ticker-wrap">
+    <div class="ticker-left">React — Next.js — Node.js — Express — Tailwind — JavaScript — TypeScript — Git — GitHub — Vercel — MongoDB — React — Next.js — Node.js — Express — Tailwind — JavaScript — TypeScript — Git — GitHub — Vercel — MongoDB —</div>
+    <div class="ticker-right">HTML — CSS — Java — C — Python — Figma — Redux — Framer Motion — Prisma — HTML — CSS — Java — C — Python — Figma — Redux — Framer Motion — Prisma —</div>
+  </div>
+
+  <!-- LOGO / HELLO -->
+  <div class="hero-logo" id="hello-wrap">
+    <span class="wave">👋</span>
+    <span class="logo-text">
+      <span class="hello-en">Hello!</span>
+      <span class="hello-hi">Namasteeeeeeeeeeeee!!🙏</span>
+    </span>
+  </div>
+
+  <!-- SOCIAL -->
+  <div class="hero-social">
+    <div class="music-wrapper">
+      <button class="music-btn" id="music-toggle" onclick="toggleMusic()">🎵</button>
+      <div class="music-menu" id="music-menu">
+        <a class="music-option" href="https://open.spotify.com/track/01iMTLk72XWI6pCH2QZ3sR?si=fd592b75501949cb" target="_blank">
+          <div class="music-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);">🌙</div>
+          <div class="music-label"><b>Soft Lofi</b><small>Chill &amp; focus vibes</small></div>
+        </a>
+        <a class="music-option" href="https://open.spotify.com/track/5gOnY5HODxz1b28te8eSAF?si=d5fc8b0cc74a4ce1" target="_blank">
+          <div class="music-icon" style="background:linear-gradient(135deg,#f7971e,#ffd200);">⚡</div>
+          <div class="music-label"><b>Khatta Flow</b><small>Seedhe Maut energy</small></div>
+        </a>
+        <a class="music-option" href="https://open.spotify.com/track/1VvGJIAjhGdB7InVP9NA7V?si=28586fb988374969" target="_blank">
+          <div class="music-icon" style="background:linear-gradient(135deg,#f953c6,#b91d73);">💙</div>
+          <div class="music-label"><b>Haareya ❤️</b><small>Feel it deeply</small></div>
+        </a>
+        <a class="spotify-link" href="https://open.spotify.com" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          Open Spotify
+        </a>
+      </div>
+    </div>
+    <a href="https://x.com" target="_blank" title="Twitter" style="font-weight:700;font-size:15px;">✕</a>
+    <a href="https://github.com/neural-aashish" target="_blank" title="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/aashish-pandey-948b0536b" target="_blank" title="LinkedIn" style="font-family:serif;font-weight:900;font-size:15px;">in</a>
+    <a href="https://instagram.com/retarded_dv" target="_blank" title="Instagram">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <div class="hero-clock" id="clock"></div>
+  </div>
+
+  <!-- NAME -->
+  <div class="hero-name">
+    <button class="speaker-btn" id="speaker-btn" onclick="speakName()" title="Hear my name">🔊</button>
+    <span class="line1" id="aashish-letters"></span>
+    <span class="line2-outer">
+      <span class="name-rel">
+        <span class="lang-word active">PANDEY</span>
+        <span class="lang-word" style="font-family:var(--font-display);">पाण्डेय</span>
+        <span class="lang-word">パンデイ</span>
+        <span class="lang-word">판데이</span>
+        <span class="lang-word">潘德伊</span>
+        <span class="lang-word">ПАНДЕЙ</span>
+        <span class="lang-word" style="font-family:serif;">باندي</span>
+        <span class="lang-word">PANDEY</span>
+        
+      </span>
+    </span>
+  </div>
+
+  <div class="hero-role">Full-Stack Developer &amp; Builder</div>
+</section>
+<section class="vishwa-hero">
+  <p class="top-line">👋 Hey, I'm Aashish Pandey, coding and crafting products and I'm a...</p>
+
+  <h1 class="main-heading">
+    Front-end focused Software Developer,
+  </h1>
+
+  <p class="sub-text">
+    specialized in scalable, user-centric web apps that prioritizes requirements.
+  </p>
+
+  <!-- FLOATING TAGS -->
+  <div class="floating-tags">
+    <span class="tag tag-yellow">📁 accessibility</span>
+    <span class="tag tag-purple">🚀 performance</span>
+    <span class="tag tag-pink">✨ UI / UX</span>
+    <span class="tag tag-green">🔥 trends</span>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="terminal-box">
+    <div class="terminal-top">
+      <div class="dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="term-title">Terminal</span>
+      <span class="moon">🌙</span>
+    </div>
+
+    <div class="terminal-content">
+      <p class="fade">Last login: Fri Apr 24 11:45:58 on console</p>
+      <p><span class="user">user@machine</span>:~$ fortune neural.in</p>
+      <p><span class="bot">bot@gpt</span>: Perfection may not be attainable, but if we chase perfection, we can catch excellence.</p>
+    </div>
+  </div>
+</section>
+  </div>
+</section>
+<!-- PROJECTS -->
+<section id="projects">
+  <h2 class="section-title reveal">Projects</h2>
+  <div class="projects-grid">
+    <a class="project-card reveal" href="https://github.com/neural-aashish/Pose-coach" target="_blank" onclick="cardClick(event,this)">
+      <div class="project-icon" style="background:#6c63ff;">🧘</div>
+      <div class="project-info">
+        <div class="project-name">Pose Coach</div>
+        <div class="project-url">Here you go!</div>
+      </div>
+    </a>
+    <a class="project-card reveal" href="https://github.com/neural-aashish/Puzzle-game" target="_blank" onclick="cardClick(event,this)">
+      <div class="project-icon" style="background:#1a1a2e;">🧩</div>
+      <div class="project-info">
+        <div class="project-name">Puzzle Game</div>
+        <div class="project-url">Here you go!</div>
+      </div>
+    </a>
+    <a class="project-card reveal" href="" onclick="location.reload()">
+      <div class="project-icon" style="background:#0a0a0a;">💼</div>
+      <div class="project-info">
+        <div class="project-name">Portfolio</div>
+        <div class="project-url">You're here!</div>
+      </div>
+    </a>
+    <a class="project-card reveal" href="https://github.com/neural-aashish/fruit-ninja" target="_blank" onclick="cardClick(event,this)">
+      <div class="project-icon" style="background:#c0392b;">🍉</div>
+      <div class="project-info">
+        <div class="project-name">Fruit Ninja Game</div>
+        <div class="project-url">Here you go!</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <h2 class="section-title reveal">Experience</h2>
+  <div class="exp-cards">
+    <div class="exp-card reveal" style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);">
+      <div class="exp-role">Role</div>
+      <div class="exp-title">AI intern</div>
+      <div class="exp-meta">
+        <div><div class="exp-company-label">Company Name</div><div class="exp-company-name">Suvidha Foundation</div></div>
+        <div><div class="exp-tenure-label">Tenure</div><div class="exp-tenure">03/2026 – 04/2026</div></div>
+      </div>
+    </div>
+    <div class="exp-card reveal" style="background:linear-gradient(135deg,#2d1b69 0%,#11998e 100%);">
+      <div class="exp-role">Role</div>
+      <div class="exp-title">WEB DEVELOPER</div>
+      <div class="exp-meta">
+        <div><div class="exp-company-label">Company Name</div><div class="exp-company-name">C</div></div>
+        <div><div class="exp-tenure-label">Tenure</div><div class="exp-tenure">04/2026 – 05/2026</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <h2 class="section-title reveal">Testimonials</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">Working with Aashish was an absolute pleasure. Delivered the project on time with incredible attention to detail and clean code.</p>
+      <div class="testimonial-author"><div class="author-avatar">AK</div><div><div class="author-name">Amit Kumar</div><div class="author-title">CTO, TechStartup</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">Exceptional frontend skills — the UI Aashish built exceeded all expectations. Our users love it and conversion went up significantly.</p>
+      <div class="testimonial-author"><div class="author-avatar">PS</div><div><div class="author-name">Priya Sharma</div><div class="author-title">Product Lead, DesignCo</div></div></div>
+    </div>
+    <div class="testimonial-card reveal">
+      <p class="testimonial-quote">One of the most reliable developers I've collaborated with. Great communication, fast execution, pixel-perfect output every time.</p>
+      <div class="testimonial-author"><div class="author-avatar">RV</div><div><div class="author-name">Rohan Verma</div><div class="author-title">Founder, BuildLabs</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-connect">Connect with me on:</p>
+  <div class="footer-social">
+    <a href="https://github.com/neural-aashish" target="_blank" title="GitHub">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/aashish-pandey-948b0536b" target="_blank" title="LinkedIn" style="font-family:serif;font-weight:900;font-size:14px;">in</a>
+    <a href="https://x.com" target="_blank" title="Twitter" style="font-weight:700;">✕</a>
+    <a href="https://instagram.com/retarded_dv" target="_blank" title="Instagram">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+    <a href="https://wa.me/" target="_blank" title="WhatsApp">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
+  <div class="footer-marquee">
+    <div class="footer-marquee-inner" id="marquee-text"></div>
+  </div>
+  <p class="footer-copy">Code &amp; Crafted with <span>♥</span> by Aashish Pandey</p>
+</footer>
+
+<script>
+// ---- CURSOR ----
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=(mx-6)+'px';cur.style.top=(my-6)+'px';
+  setTimeout(()=>{ring.style.left=(mx-18)+'px';ring.style.top=(my-18)+'px';},60);
+});
+document.querySelectorAll('a,button,.project-card,.exp-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-big'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-big'));
+});
+
+// ---- POP SOUND + RIPPLE ----
+function playPop(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.setValueAtTime(900,ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(180,ctx.currentTime+0.09);
+    g.gain.setValueAtTime(0.25,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.1);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+0.1);
+  }catch(e){}
+}
+document.addEventListener('click',e=>{
+  playPop();
+  const r=document.createElement('div');
+  r.className='pop-ripple';
+  r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';
+  document.body.appendChild(r);
+  setTimeout(()=>r.remove(),400);
+});
+
+// ---- PAGE TRANSITION ----
+const pt=document.getElementById('page-transition');
+function doTransition(cb){
+  pt.classList.remove('out');
+  pt.classList.add('active');
+  setTimeout(()=>{
+    cb();
+    pt.classList.remove('active');
+    pt.classList.add('out');
+    setTimeout(()=>pt.classList.remove('out'),500);
+  },480);
+}
+function navClick(e,target){
+  e.preventDefault();
+  doTransition(()=>document.querySelector(target).scrollIntoView());
+}
+function navTo(target){
+  doTransition(()=>document.querySelector(target).scrollIntoView());
+}
+function cardClick(e,el){
+  const href=el.getAttribute('href');
+  if(!href||href==='#')return;
+  e.preventDefault();
+  doTransition(()=>window.open(href,'_blank'));
+}
+
+// ---- CLOCK ----
+function updateClock(){
+  const now=new Date(),h=now.getHours(),m=now.getMinutes();
+  const ampm=h>=12?'pm':'am',hh=h%12||12,mm=String(m).padStart(2,'0');
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('clock').innerHTML=`${hh}:${mm} ${ampm}<br><span style="font-size:10px;opacity:0.6">${mo[now.getMonth()]} ${now.getDate()}</span>`;
+}
+updateClock();setInterval(updateClock,1000);
+
+// ---- MUSIC MENU ----
+function toggleMusic(){
+  document.getElementById('music-menu').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.music-wrapper'))
+    document.getElementById('music-menu').classList.remove('open');
+});
+
+// ---- AASHISH letter-by-letter ----
+'AASHISH'.split('').forEach(l=>{
+  const s=document.createElement('span');
+  s.className='letter';s.textContent=l;
+  document.getElementById('aashish-letters').appendChild(s);
+});
+
+// ---- MULTILINGUAL CYCLE ----
+const words=document.querySelectorAll('.lang-word');
+let cur2=0;
+setInterval(()=>{
+  const prev=cur2;
+  cur2=(cur2+1)%words.length;
+  words[prev].classList.remove('active');
+  words[prev].classList.add('exit');
+  setTimeout(()=>words[prev].classList.remove('exit'),450);
+  words[cur2].classList.add('active');
+},2200);
+
+// ---- SPEAK NAME ----
+function speakName(){
+  const btn=document.getElementById('speaker-btn');
+  if(speechSynthesis.speaking){speechSynthesis.cancel();btn.classList.remove('speaking');return;}
+  btn.classList.add('speaking');
+  const u=new SpeechSynthesisUtterance('Aashish Pandey');
+  u.lang='en-IN';u.rate=0.85;u.pitch=1.1;
+  u.onend=()=>btn.classList.remove('speaking');
+  speechSynthesis.speak(u);
+}
+
+// ---- MARQUEE ----
+const txt='Thanks for visiting my portfolio! | Aashish Pandey | Code & Crafted with प्रेम ♥ | ';
+document.getElementById('marquee-text').textContent=(txt+txt+txt+txt+txt+txt);
+
+// ---- SCROLL REVEAL ----
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),80);});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
+</script>
+</body>
+</html>
