@@ -102,44 +102,6 @@ header{
   transition:stroke-dashoffset 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* ── MUSIC POPUP (new design like image 1) ── */
-.music-popup-wrap{position:relative;display:inline-flex;}
-#musicPopup{
-  position:absolute;top:calc(100% + 14px);right:-10px;
-  background:white;border-radius:20px;
-  padding:18px 18px 16px;
-  width:310px;
-  box-shadow:0 12px 50px rgba(0,0,0,0.15),0 2px 10px rgba(0,0,0,0.08);
-  opacity:0;pointer-events:none;transform:translateY(-8px) scale(0.97);
-  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-  z-index:1000;
-}
-#musicPopup.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
-.mpop-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-.mpop-icon{font-size:1.6rem;}
-.mpop-title{font-weight:700;font-size:1.05rem;color:var(--black);}
-.mpop-tabs{display:flex;gap:8px;margin-bottom:14px;}
-.mpop-tab{width:38px;height:38px;border-radius:50%;border:2px solid #eee;background:white;display:flex;align-items:center;justify-content:center;cursor:none;font-size:1rem;transition:all 0.2s;}
-.mpop-tab:hover,.mpop-tab.active{border-color:var(--black);background:var(--black);color:white;}
-.mpop-playlist-label{font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.mpop-playlist-label svg{width:14px;height:14px;}
-.mpop-track{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;cursor:none;transition:all 0.2s;text-decoration:none;color:inherit;}
-.mpop-track:hover{background:#f5f5f0;}
-.mpop-thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#eee;}
-.mpop-track-info h4{font-size:0.9rem;font-weight:700;margin-bottom:2px;}
-.mpop-track-info p{font-size:0.75rem;color:var(--gray);margin:0;}
-.mpop-listen-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px;border-radius:12px;background:#1DB954;color:white;font-size:0.8rem;font-weight:700;text-decoration:none;cursor:none;transition:opacity 0.2s;}
-.mpop-listen-btn:hover{opacity:0.87;}
-
-.music-icon-btn{background:none;border:none;cursor:none;color:var(--black);padding:4px 6px;display:flex;align-items:center;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
-.music-icon-btn:hover{color:var(--accent);}
-.eq-bars{display:flex;gap:2px;align-items:flex-end;height:16px;}
-.eq-bar{width:3px;background:currentColor;border-radius:2px;animation:eqAnim 0.8s ease-in-out infinite alternate;}
-.eq-bar:nth-child(1){height:6px;animation-delay:0s;}
-.eq-bar:nth-child(2){height:12px;animation-delay:0.15s;}
-.eq-bar:nth-child(3){height:8px;animation-delay:0.3s;}
-.eq-bar:nth-child(4){height:14px;animation-delay:0.1s;}
-@keyframes eqAnim{from{transform:scaleY(0.4);}to{transform:scaleY(1);}}
 
 .resume-dl-btn{display:flex;align-items:center;gap:5px;color:var(--black);font-size:0.78rem;font-weight:600;text-decoration:none;border:1.5px solid rgba(0,0,0,0.2);border-radius:100px;padding:5px 12px;transition:all 0.2s;cursor:none;}
 .resume-dl-btn:hover{background:var(--accent);color:white;border-color:var(--accent);}
@@ -539,43 +501,6 @@ body.hareya{background:#fffbf0;}
   <div class="header-right">
     <div class="social-icons">
 
-      <!-- MUSIC ICON with popup -->
-      <div class="music-popup-wrap social-item">
-        <button class="music-icon-btn" id="musicBtn" onclick="toggleMusicPopup()">
-          <span class="eq-bars">
-            <span class="eq-bar"></span><span class="eq-bar"></span>
-            <span class="eq-bar"></span><span class="eq-bar"></span>
-          </span>
-        </button>
-        <!-- Music Popup -->
-        <div id="musicPopup">
-          <div class="mpop-header">
-            <span class="mpop-icon">🎵</span>
-            <span class="mpop-title">Change Track</span>
-          </div>
-          <div class="mpop-tabs">
-            <button class="mpop-tab active" id="tab-seedhe" onclick="switchTab('seedhe')" title="Seedhe Maut">🎤</button>
-            <button class="mpop-tab" id="tab-romantic" onclick="switchTab('romantic')" title="Romantic">🎸</button>
-            <button class="mpop-tab" id="tab-chatpate" onclick="switchTab('chatpate')" title="Chatpate">IN</button>
-          </div>
-          <div class="mpop-playlist-label">
-            <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-            Top on Spotify
-          </div>
-          <a class="mpop-track" id="mpop-track-link" href="https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7" target="_blank">
-            <div class="mpop-thumb" id="mpop-thumb" style="background:linear-gradient(135deg,#1a1a2e,#6c63ff);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎤</div>
-            <div class="mpop-track-info">
-              <h4 id="mpop-track-name">Seedhe Maut</h4>
-              <p id="mpop-track-artist">Hard hitting energy</p>
-            </div>
-          </a>
-          <a class="mpop-listen-btn" id="mpop-open-link" href="https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7" target="_blank">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-            Listen on Spotify ↗
-          </a>
-        </div>
-      </div>
-
       <!-- Resume -->
       <div class="social-item hide-mobile">
         <a href="Resume.pdf" target="_blank" title="Resume download" style="font-weight:700;font-size:1.1rem;">🗐</a>
@@ -810,7 +735,7 @@ body.hareya{background:#fffbf0;}
   <div class="section-label">WORK</div>
   <h2 class="section-title">Projects</h2>
   <div class="projects-grid" id="projectsGrid">
-    <a class="project-card" href="posecoach.netlify.app" target="_blank">
+    <a class="project-card" href="pose.html" target="_blank">
       <div class="project-icon" style="background:#6c63ff;">🧘</div>
       <div class="project-info"><h3>Pose Coach</h3><span class="project-url">Here you go!!</span></div>
     </a>
@@ -850,7 +775,7 @@ body.hareya{background:#fffbf0;}
   <div class="section-label">SUPPORT</div>
   <h2 class="section-title" style="font-size:clamp(2rem,4vw,3.5rem);">Enjoying my work?</h2>
   <p style="color:var(--gray);line-height:1.7;max-width:600px;margin:0 auto 36px;">If my projects helped you, consider buying me a coffee! It keeps me going through those late night coding sessions ☕</p>
-  <a href="mailto:pandeyaashish603@gmail.com" class="coffee-btn">☕ Buy me a coffee</a>
+  <a href="coffee.html" class="coffee-btn">☕ Buy me a coffee</a>
   <div class="supporters-feed" id="supportersFeed"></div>
 </section>
 
@@ -1019,60 +944,7 @@ function speakName() {
   speechSynthesis.speak(u);
 }
 
-// ══ MUSIC POPUP ══
-const playlists = {
-  seedhe: {
-    name: 'Seedhe Maut',
-    artist: 'Hard hitting energy',
-    emoji: '🎤',
-    bg: 'linear-gradient(135deg,#1a1a2e,#6c63ff)',
-    url: 'https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7'
-  },
-  romantic: {
-    name: 'Romantic Vibes',
-    artist: 'Feel it deeply ❤️',
-    emoji: '🎸',
-    bg: 'linear-gradient(135deg,#ff758c,#ff7eb3)',
-    url: 'https://open.spotify.com/playlist/0zc6Hq9OIAengtGG6a3lfs'
-  },
-  chatpate: {
-    name: 'Chatpate',
-    artist: 'Desi energy hits',
-    emoji: '🌶️',
-    bg: 'linear-gradient(135deg,#f5a623,#e74c3c)',
-    url: 'https://open.spotify.com/playlist/1DatcBStkkmYNY6KKvPbv4'
-  }
-};
 
-let currentTab = 'seedhe';
-let musicOpen = false;
-
-function toggleMusicPopup() {
-  musicOpen = !musicOpen;
-  document.getElementById('musicPopup').classList.toggle('open', musicOpen);
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  const pl = playlists[tab];
-  document.getElementById('mpop-track-name').textContent = pl.name;
-  document.getElementById('mpop-track-artist').textContent = pl.artist;
-  document.getElementById('mpop-thumb').style.background = pl.bg;
-  document.getElementById('mpop-thumb').textContent = pl.emoji;
-  document.getElementById('mpop-track-link').href = pl.url;
-  document.getElementById('mpop-open-link').href = pl.url;
-  document.querySelectorAll('.mpop-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-}
-
-// Close popup when clicking outside
-document.addEventListener('click', e => {
-  const wrap = document.querySelector('.music-popup-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    musicOpen = false;
-    document.getElementById('musicPopup').classList.remove('open');
-  }
-});
 
 // ── CONTACT ──
 function openContact() {
