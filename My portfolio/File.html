@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aashish Pandey — Portfolio</title>
+<title>Neuraldv</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -27,24 +27,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--black);ov
 .pop-ripple{position:fixed;border-radius:50%;background:rgba(245,166,35,0.35);pointer-events:none;z-index:9998;transform:scale(0);animation:popOut 0.5s ease-out forwards;}
 @keyframes popOut{0%{transform:scale(0);opacity:1;}100%{transform:scale(4);opacity:0;}}
 
-/* ══════════════════════════════
-   NAV TRANSITION — black curtain
-   comes down, shows section name,
-   goes up to reveal destination
-══════════════════════════════ */
+/* ══ NAV CURTAIN ══ */
 #nav-curtain{
   position:fixed;inset:0;z-index:8000;
   background:var(--black);
   pointer-events:none;
-  clip-path:inset(100% 0 0 0); /* hidden at bottom */
+  clip-path:inset(100% 0 0 0);
   transition:clip-path 0.55s cubic-bezier(0.76,0,0.24,1);
 }
 #nav-curtain.slide-in{
-  clip-path:inset(0% 0 0 0);   /* fully visible */
+  clip-path:inset(0% 0 0 0);
   pointer-events:all;
 }
 #nav-curtain.slide-out{
-  clip-path:inset(0 0 100% 0); /* exits upward */
+  clip-path:inset(0 0 100% 0);
 }
 #curtain-label{
   position:absolute;top:50%;left:50%;
@@ -60,7 +56,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--black);ov
 }
 #nav-curtain.slide-in #curtain-label{opacity:1;}
 
-/* ── HEADER — transparent, NO bg ── */
+/* ── HEADER ── */
 header{
   position:fixed;top:0;left:0;right:0;
   z-index:200;
@@ -68,7 +64,6 @@ header{
   padding:16px 36px;
   background:transparent;
 }
-/* Hello hover */
 .logo{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:700;color:var(--accent);text-decoration:none;cursor:none;position:relative;min-width:90px;}
 .logo-wave{font-size:1.25rem;animation:waveHand 2.5s infinite;display:inline-block;transform-origin:70% 70%;}
 @keyframes waveHand{0%,60%,100%{transform:rotate(0);}10%,30%{transform:rotate(14deg);}20%{transform:rotate(-8deg);}40%{transform:rotate(14deg);}50%{transform:rotate(-4deg);}}
@@ -78,12 +73,66 @@ header{
 .logo:hover .hello-hi{opacity:1;transform:translateY(0);}
 
 .header-right{display:flex;align-items:center;gap:16px;}
-.social-icons{display:flex;gap:12px;align-items:center;}
-.social-icons a{color:var(--black);text-decoration:none;font-size:1rem;font-weight:600;transition:all 0.2s;padding:4px;display:flex;align-items:center;cursor:none;}
-.social-icons a:hover{color:var(--accent);transform:scale(1.15);}
 
-.music-icon-btn{background:none;border:none;cursor:none;color:var(--black);padding:6px;display:flex;align-items:center;transition:all 0.2s;}
-.music-icon-btn:hover{color:var(--accent);transform:scale(1.15);}
+/* ── SOCIAL ICONS with scribble SVG underline ── */
+.social-icons{display:flex;gap:12px;align-items:center;}
+.social-item{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.social-icons a,.social-icons button{color:var(--black);text-decoration:none;font-size:1rem;font-weight:600;transition:all 0.2s;padding:4px 6px;display:flex;align-items:center;cursor:none;background:none;border:none;font-family:'DM Sans',sans-serif;position:relative;}
+.social-icons a:hover,.social-icons button:hover{color:var(--accent);}
+
+/* Scribble SVG underline */
+.scribble-svg{
+  position:absolute;bottom:-6px;left:0;right:0;
+  width:100%;height:12px;
+  pointer-events:none;
+  overflow:visible;
+}
+.scribble-path{
+  stroke:var(--accent);
+  stroke-width:2.5;
+  fill:none;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:200;
+  stroke-dashoffset:200;
+  transition:stroke-dashoffset 0s;
+}
+.social-item:hover .scribble-path{
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── MUSIC POPUP (new design like image 1) ── */
+.music-popup-wrap{position:relative;display:inline-flex;}
+#musicPopup{
+  position:absolute;top:calc(100% + 14px);right:-10px;
+  background:white;border-radius:20px;
+  padding:18px 18px 16px;
+  width:310px;
+  box-shadow:0 12px 50px rgba(0,0,0,0.15),0 2px 10px rgba(0,0,0,0.08);
+  opacity:0;pointer-events:none;transform:translateY(-8px) scale(0.97);
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  z-index:1000;
+}
+#musicPopup.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.mpop-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.mpop-icon{font-size:1.6rem;}
+.mpop-title{font-weight:700;font-size:1.05rem;color:var(--black);}
+.mpop-tabs{display:flex;gap:8px;margin-bottom:14px;}
+.mpop-tab{width:38px;height:38px;border-radius:50%;border:2px solid #eee;background:white;display:flex;align-items:center;justify-content:center;cursor:none;font-size:1rem;transition:all 0.2s;}
+.mpop-tab:hover,.mpop-tab.active{border-color:var(--black);background:var(--black);color:white;}
+.mpop-playlist-label{font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.mpop-playlist-label svg{width:14px;height:14px;}
+.mpop-track{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;cursor:none;transition:all 0.2s;text-decoration:none;color:inherit;}
+.mpop-track:hover{background:#f5f5f0;}
+.mpop-thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#eee;}
+.mpop-track-info h4{font-size:0.9rem;font-weight:700;margin-bottom:2px;}
+.mpop-track-info p{font-size:0.75rem;color:var(--gray);margin:0;}
+.mpop-listen-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px;border-radius:12px;background:#1DB954;color:white;font-size:0.8rem;font-weight:700;text-decoration:none;cursor:none;transition:opacity 0.2s;}
+.mpop-listen-btn:hover{opacity:0.87;}
+
+.music-icon-btn{background:none;border:none;cursor:none;color:var(--black);padding:4px 6px;display:flex;align-items:center;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.music-icon-btn:hover{color:var(--accent);}
 .eq-bars{display:flex;gap:2px;align-items:flex-end;height:16px;}
 .eq-bar{width:3px;background:currentColor;border-radius:2px;animation:eqAnim 0.8s ease-in-out infinite alternate;}
 .eq-bar:nth-child(1){height:6px;animation-delay:0s;}
@@ -97,26 +146,6 @@ header{
 
 .clock{font-size:0.95rem;font-weight:700;color:var(--black);text-align:right;line-height:1.2;}
 .clock-date{font-size:0.68rem;font-weight:400;color:var(--gray);}
-
-/* ── MUSIC MODAL ── */
-#musicModal{display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);align-items:center;justify-content:center;}
-#musicModal.show{display:flex;animation:fadeInM 0.3s ease;}
-@keyframes fadeInM{from{opacity:0;}to{opacity:1;}}
-.music-modal-box{background:white;border-radius:28px;padding:40px;max-width:480px;width:90%;text-align:center;position:relative;animation:slideUpM 0.35s cubic-bezier(.34,1.56,.64,1);}
-@keyframes slideUpM{from{transform:translateY(60px) scale(0.9);opacity:0;}to{transform:translateY(0) scale(1);opacity:1;}}
-.music-modal-box h2{font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:8px;}
-.music-modal-box>p{color:var(--gray);font-size:0.9rem;margin-bottom:28px;}
-.music-options{display:flex;flex-direction:column;gap:12px;}
-.music-opt{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:16px;border:2px solid #eee;cursor:none;transition:all 0.2s;text-align:left;background:white;font-family:'DM Sans',sans-serif;width:100%;}
-.music-opt:hover{border-color:var(--black);transform:translateX(4px);background:#fafafa;}
-.music-opt-icon{font-size:2rem;}
-.music-opt-info h4{font-size:1rem;font-weight:700;margin-bottom:2px;}
-.music-opt-info p{font-size:0.78rem;color:var(--gray);margin:0;}
-.close-modal{position:absolute;top:16px;right:18px;background:none;border:none;font-size:1.4rem;cursor:none;color:var(--gray);line-height:1;}
-#spotifyArea{margin-top:16px;border-radius:16px;overflow:hidden;display:none;}
-#spotifyArea.show{display:block;}
-.spotify-open-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;padding:10px;border-radius:12px;background:#1DB954;color:white;font-size:13px;font-weight:600;text-decoration:none;cursor:none;transition:opacity 0.2s;}
-.spotify-open-btn:hover{opacity:0.85;}
 
 /* ── CONTACT SLIDE-UP ── */
 #contactOverlay{position:fixed;inset:0;z-index:699;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);display:none;cursor:none;}
@@ -147,7 +176,6 @@ header{
 .cf-field input:focus,.cf-field textarea:focus,.cf-field select:focus{
   outline:none;border-color:var(--black);box-shadow:0 0 0 3px rgba(10,10,10,0.06);
 }
-/* Math captcha */
 .cf-captcha-box{background:#f5f5f0;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;margin-bottom:16px;border:1.5px solid #e8e8e3;}
 .cf-captcha-q{font-weight:700;font-size:1rem;color:var(--black);}
 .cf-captcha-input{width:80px;padding:8px 12px;border:1.5px solid #e8e8e3;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.9rem;text-align:center;background:white;cursor:none;}
@@ -202,24 +230,65 @@ header{
 .speaker-btn.speaking{background:var(--accent);border-color:var(--accent);animation:speakPulse 0.5s ease infinite alternate;}
 @keyframes speakPulse{from{transform:scale(1);}to{transform:scale(1.15);}}
 
-/* ── BOTTOM NAV — translucent dark ── */
+/* ══ BOTTOM NAV — bigger, no wrap ══ */
 .bottom-nav{
   position:fixed;bottom:28px;left:50%;
   transform:translateX(-50%);z-index:500;
-  background:rgba(10,10,10,0.68);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:60px;padding:10px 14px;
-  display:flex;align-items:center;gap:4px;
-  box-shadow:0 8px 40px rgba(0,0,0,0.3);
+  background:rgba(10,10,10,0.75);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:70px;padding:12px 18px;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.35);
+  white-space:nowrap;
 }
-.nav-home-btn{background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:none;color:white;font-size:1rem;transition:background 0.2s;}
-.nav-home-btn:hover{background:rgba(255,255,255,0.2);}
-.nav-links{display:flex;gap:2px;margin:0 4px;}
-.nav-link{color:rgba(255,255,255,0.58);text-decoration:none;font-size:0.88rem;font-weight:500;padding:8px 16px;border-radius:40px;transition:all 0.2s;cursor:none;border:none;background:none;font-family:'DM Sans',sans-serif;}
-.nav-link:hover,.nav-link.active{color:white;background:rgba(255,255,255,0.12);}
-.nav-cta{background:white;color:var(--black);text-decoration:none;font-size:0.88rem;font-weight:700;padding:9px 20px;border-radius:40px;display:flex;align-items:center;gap:6px;transition:all 0.2s;margin-left:4px;cursor:none;border:none;font-family:'DM Sans',sans-serif;}
+.nav-home-btn{
+  background:rgba(255,255,255,0.12);border:none;border-radius:50%;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+  cursor:none;color:white;font-size:1.05rem;transition:background 0.2s;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.nav-home-btn:hover{background:rgba(255,255,255,0.22);}
+
+/* Nav bg animations per section */
+.nav-home-btn .nav-btn-bg{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--accent) 0%, transparent 60%);
+  animation:spinBg 4s linear infinite;opacity:0.4;
+}
+@keyframes spinBg{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.nav-links{display:flex;gap:4px;margin:0 6px;}
+.nav-link{
+  color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;font-weight:500;
+  padding:9px 18px;border-radius:44px;transition:all 0.22s;cursor:none;
+  border:none;background:none;font-family:'DM Sans',sans-serif;
+  position:relative;overflow:hidden;white-space:nowrap;
+}
+.nav-link::before{
+  content:'';position:absolute;inset:0;border-radius:44px;
+  background:rgba(255,255,255,0.08);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.3s ease;
+}
+.nav-link:hover::before,.nav-link.active::before{transform:scaleX(1);}
+.nav-link:hover,.nav-link.active{color:white;}
+
+/* Each nav link gets its own accent color on hover */
+.nav-link[data-section="about"]:hover{color:#a78bfa;}
+.nav-link[data-section="projects"]:hover{color:#34d399;}
+.nav-link[data-section="experience"]:hover{color:#fb923c;}
+.nav-link[data-section="coffee"]:hover{color:#fde047;}
+
+.nav-cta{
+  background:white;color:var(--black);text-decoration:none;
+  font-size:0.9rem;font-weight:700;padding:10px 22px;border-radius:44px;
+  display:flex;align-items:center;gap:6px;transition:all 0.2s;
+  margin-left:6px;cursor:none;border:none;font-family:'DM Sans',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+}
 .nav-cta:hover{background:var(--accent);color:white;}
+
 @keyframes navBounce{0%{transform:scale(1);}40%{transform:scale(0.92);}70%{transform:scale(1.06);}100%{transform:scale(1);}}
 .nav-link.bounce{animation:navBounce 0.4s ease;}
 
@@ -228,7 +297,7 @@ section{padding:100px 48px;max-width:1400px;margin:0 auto;}
 .section-label{font-size:0.75rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-bottom:16px;}
 .section-title{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;line-height:1;color:var(--black);margin-bottom:48px;}
 
-/* ── ABOUT ── */
+/* ── ABOUT — moving tilt tiles ── */
 #about{padding-top:140px;}
 .about-intro{font-size:0.9rem;color:var(--gray);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 .about-headline{font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;max-width:900px;margin-bottom:24px;}
@@ -250,19 +319,42 @@ section{padding:100px 48px;max-width:1400px;margin:0 auto;}
 .tag-blue{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8;}
 .tag-orange{background:#fff7ed;border-color:#f97316;color:#c2410c;}
 
+/* Tilt tiles for about section */
+.about-tiles{
+  display:flex;gap:16px;margin-top:48px;flex-wrap:wrap;
+}
+.about-tile{
+  width:160px;height:160px;border-radius:22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:2.2rem;gap:8px;
+  cursor:none;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;
+  will-change:transform;
+  transform-style:preserve-3d;
+  position:relative;overflow:hidden;
+}
+.about-tile span{font-size:0.78rem;font-weight:700;letter-spacing:0.5px;}
+.about-tile::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);
+  border-radius:22px;pointer-events:none;
+}
+.at-1{background:#fef3c7;color:#d97706;}
+.at-2{background:#dcfce7;color:#16a34a;}
+.at-3{background:#ede9fe;color:#7c3aed;}
+.at-4{background:#fee2e2;color:#dc2626;}
+.at-5{background:#e0f2fe;color:#0369a1;}
+.at-6{background:#fdf4ff;color:#a21caf;}
+
 /* ── STATS ── */
 #stats{background:white;border-radius:24px;margin:0 32px;padding:80px 64px;max-width:none;}
-#stats h2{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3.5vw,3rem);text-align:center;margin-bottom:48px;background:linear-gradient(135deg,#9b59b6,#e91e8c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .stat-num{font-size:1.8rem;font-weight:800;color:var(--black);}
 .stat-label{font-size:0.8rem;color:var(--gray);margin-top:2px;}
 
 /* ── EXPERIENCE — FLIP CARDS ── */
 #experience{max-width:1400px;margin:0 auto;padding:80px 48px;}
-.exp-scroll-hint{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--gray);margin-bottom:32px;}
 .exp-cards-wrapper{overflow-x:auto;display:flex;gap:24px;padding-bottom:20px;scrollbar-width:none;}
 .exp-cards-wrapper::-webkit-scrollbar{display:none;}
-
-/* flip card container */
 .flip-card{min-width:400px;height:220px;flex-shrink:0;perspective:1000px;cursor:none;}
 .flip-card-inner{
   width:100%;height:100%;
@@ -286,8 +378,6 @@ section{padding:100px 48px;max-width:1400px;margin:0 auto;}
 .flip-back ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
 .flip-back ul li{font-size:0.82rem;opacity:0.9;display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
 .flip-back ul li::before{content:"✦";color:var(--accent);flex-shrink:0;font-size:0.7rem;margin-top:2px;}
-
-/* front styles same as old exp-card */
 .flip-front{background-size:cover;background-position:center;position:relative;}
 .flip-front::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,0.42);border-radius:20px;}
 .flip-front-inner{position:relative;z-index:2;}
@@ -311,9 +401,11 @@ section{padding:100px 48px;max-width:1400px;margin:0 auto;}
 .feature-card h3{font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;margin-bottom:16px;}
 .feature-card p{font-size:0.9rem;color:#444;line-height:1.6;}
 
-/* ── PROJECTS ── */
-#projects{max-width:1400px;margin:0 auto;padding:80px 48px;}
-.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+/* ── PROJECTS — dots upward ── */
+#projects{max-width:1400px;margin:0 auto;padding:80px 48px;position:relative;}
+/* Floating dots canvas */
+#dotCanvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;position:relative;z-index:1;}
 .project-card{border:1.5px solid #e5e5e0;border-radius:20px;padding:24px;display:flex;align-items:center;gap:18px;background:white;transition:all 0.25s;cursor:none;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
 .project-card::after{content:'';position:absolute;inset:0;background:var(--black);transform:scaleY(0);transform-origin:bottom;transition:transform 0.35s cubic-bezier(0.76,0,0.24,1);z-index:0;border-radius:18px;}
 .project-card:hover::after{transform:scaleY(1);}
@@ -323,7 +415,7 @@ section{padding:100px 48px;max-width:1400px;margin:0 auto;}
 .project-info{position:relative;z-index:1;}
 .project-info h3{font-size:0.95rem;font-weight:700;margin-bottom:4px;transition:color 0.3s;}
 .project-url{font-size:0.78rem;color:#3b82f6;transition:color 0.3s;}
-.load-more-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:40px auto 0;background:var(--black);color:white;border:none;border-radius:100px;padding:14px 32px;font-size:0.9rem;font-weight:600;cursor:none;font-family:inherit;transition:opacity 0.2s;}
+.load-more-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:40px auto 0;background:var(--black);color:white;border:none;border-radius:100px;padding:14px 32px;font-size:0.9rem;font-weight:600;cursor:none;font-family:inherit;transition:opacity 0.2s;position:relative;z-index:1;}
 .load-more-btn:hover{opacity:0.8;}
 
 /* ── TESTIMONIALS ── */
@@ -356,14 +448,10 @@ footer{padding:48px;text-align:center;border-top:1px solid #e5e5e0;}
 .marquee-track span{margin:0 24px;font-size:0.85rem;color:var(--gray);}
 @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-/* hareya warm bg */
 body.hareya{background:#fffbf0;}
-
-/* fade in */
 .fade-in{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease;}
 .fade-in.visible{opacity:1;transform:translateY(0);}
 
-/* responsive */
 @media(max-width:900px){
   .projects-grid{grid-template-columns:1fr 1fr;}
   .features-grid{grid-template-columns:1fr 1fr;}
@@ -371,12 +459,19 @@ body.hareya{background:#fffbf0;}
   section{padding:60px 20px;}
   .cf-row{grid-template-columns:1fr;}
 }
+@media(max-width:700px){
+  .bottom-nav{padding:10px 12px;gap:4px;}
+  .nav-link{padding:8px 10px;font-size:0.8rem;}
+  .nav-cta{padding:8px 14px;font-size:0.8rem;}
+}
 @media(max-width:600px){
   .projects-grid{grid-template-columns:1fr;}
   .features-grid{grid-template-columns:1fr;}
   .hide-mobile{display:none!important;}
   #contactSlide{padding:28px 20px 72px;}
   .flip-card{min-width:300px;}
+  .about-tiles{gap:10px;}
+  .about-tile{width:120px;height:120px;font-size:1.8rem;}
 }
 </style>
 <link rel="icon" type="image/png" href="logo.png">
@@ -384,22 +479,19 @@ body.hareya{background:#fffbf0;}
 <body>
 
 <div id="cursor"></div>
-<div id="nav-curtain">
-  <div id="curtain-label"></div>
-</div>
-<!-- ══ BLACK CURTAIN TRANSITION ══ -->
+
+<!-- ONE nav curtain (fixed duplicate) -->
 <div id="nav-curtain">
   <div id="curtain-label"></div>
 </div>
 
-<!-- ══ CONTACT OVERLAY + SLIDE-UP ══ -->
+<!-- ══ CONTACT ══ -->
 <div class="contact-overlay" id="contactOverlay" onclick="closeContact()"></div>
 <div id="contactSlide">
   <button class="contact-close" onclick="closeContact()">✕</button>
   <div class="contact-form-wrap">
     <div class="contact-title">Let's talk 💬</div>
     <div class="contact-sub">Fill this out — I'll reply within 24 hours, promise!</div>
-
     <div class="cf-row">
       <div class="cf-field">
         <label>Your Name *</label>
@@ -410,7 +502,6 @@ body.hareya{background:#fffbf0;}
         <input type="email" id="cf-email" placeholder="rahul@email.com" autocomplete="off"/>
       </div>
     </div>
-
     <div class="cf-field">
       <label>What's it about? *</label>
       <select id="cf-topic">
@@ -423,56 +514,18 @@ body.hareya{background:#fffbf0;}
         <option>Other</option>
       </select>
     </div>
-
     <div class="cf-field">
       <label>Your Message *</label>
       <textarea id="cf-msg" rows="5" placeholder="Hey Aashish, I wanted to..."></textarea>
     </div>
-
-    <!-- Math captcha -->
     <div class="cf-captcha-box">
       <span class="cf-captcha-q" id="captchaQ">Loading...</span>
       <input type="number" class="cf-captcha-input" id="captchaAns" placeholder="?" />
       <span class="cf-captcha-hint">Prove you're human 🙂</span>
     </div>
     <div class="cf-error-msg" id="cfError">❌ Wrong answer! Try again.</div>
-
-    <button class="cf-submit" id="cfSubmitBtn" onclick="sendContact()">
-      Send Message →
-    </button>
-    <div class="cf-success" id="cfSuccess">
-      ✅ Message sent! Opening your mail client... Check your sent folder.
-    </div>
-  </div>
-</div>
-
-<!-- ══ MUSIC MODAL ══ -->
-<div id="musicModal">
-  <div class="music-modal-box">
-    <button class="close-modal" onclick="closeMusic()">✕</button>
-    <h2>🎵 Mood Music</h2>
-    <p>Kya sunna chahte ho aaj?</p>
-    <div class="music-options">
-      <button class="music-opt" onclick="playLofi()">
-        <span class="music-opt-icon">🌙</span>
-        <div class="music-opt-info"><h4>Soft Lofi</h4><p>Chill focus vibes — study &amp; code</p></div>
-      </button>
-      <button class="music-opt" onclick="playKhatta()">
-        <span class="music-opt-icon">🍋</span>
-        <div class="music-opt-info"><h4>Rock — Khatta Flow</h4><p>Seedhe Maut — hard hitting energy</p></div>
-      </button>
-      <button class="music-opt" onclick="playHareya()">
-        <span class="music-opt-icon">💙</span>
-        <div class="music-opt-info"><h4>Haareya ❤️</h4><p>Arijit Singh — feel it deeply</p></div>
-      </button>
-    </div>
-    <div id="spotifyArea">
-      <iframe id="spotifyFrame" style="border-radius:16px;width:100%;height:152px;" frameborder="0" allowfullscreen allow="autoplay;clipboard-write;encrypted-media;fullscreen;picture-in-picture" loading="lazy"></iframe>
-      <a class="spotify-open-btn" id="spotifyOpenLink" href="https://open.spotify.com" target="_blank">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        Open in Spotify
-      </a>
-    </div>
+    <button class="cf-submit" id="cfSubmitBtn" onclick="sendContact()">Send Message →</button>
+    <div class="cf-success" id="cfSuccess">✅ Message sent! Opening your mail client... Check your sent folder.</div>
   </div>
 </div>
 
@@ -485,21 +538,88 @@ body.hareya{background:#fffbf0;}
   </a>
   <div class="header-right">
     <div class="social-icons">
-      <button class="music-icon-btn" onclick="openMusic()" title="Mood Music">
-        <span class="eq-bars">
-          <span class="eq-bar"></span><span class="eq-bar"></span>
-          <span class="eq-bar"></span><span class="eq-bar"></span>
-        </span>
-      </button>
-      <a href="Resume.pdf" download class="resume-dl-btn hide-mobile">⬇ Resume</a>
-      <a href="https://x.com/AashishPan13357" target="_blank" class="hide-mobile" title="X / Twitter" style="font-weight:700;font-size:1.1rem;">𝕏</a>
-      <a href="https://github.com/neural-aashish" target="_blank" class="hide-mobile" title="GitHub">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-      </a>
-      <a href="https://linkedin.com/in/aashish-pandey-948b0536b" target="_blank" class="hide-mobile" title="LinkedIn" style="font-family:serif;font-weight:900;font-size:1.1rem;">in</a>
-      <a href="https://instagram.com/retarded_dv" target="_blank" class="hide-mobile" title="Instagram">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-      </a>
+
+      <!-- MUSIC ICON with popup -->
+      <div class="music-popup-wrap social-item">
+        <button class="music-icon-btn" id="musicBtn" onclick="toggleMusicPopup()">
+          <span class="eq-bars">
+            <span class="eq-bar"></span><span class="eq-bar"></span>
+            <span class="eq-bar"></span><span class="eq-bar"></span>
+          </span>
+        </button>
+        <!-- Music Popup -->
+        <div id="musicPopup">
+          <div class="mpop-header">
+            <span class="mpop-icon">🎵</span>
+            <span class="mpop-title">Change Track</span>
+          </div>
+          <div class="mpop-tabs">
+            <button class="mpop-tab active" id="tab-seedhe" onclick="switchTab('seedhe')" title="Seedhe Maut">🎤</button>
+            <button class="mpop-tab" id="tab-romantic" onclick="switchTab('romantic')" title="Romantic">🎸</button>
+            <button class="mpop-tab" id="tab-chatpate" onclick="switchTab('chatpate')" title="Chatpate">IN</button>
+          </div>
+          <div class="mpop-playlist-label">
+            <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            Top on Spotify
+          </div>
+          <a class="mpop-track" id="mpop-track-link" href="https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7" target="_blank">
+            <div class="mpop-thumb" id="mpop-thumb" style="background:linear-gradient(135deg,#1a1a2e,#6c63ff);display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎤</div>
+            <div class="mpop-track-info">
+              <h4 id="mpop-track-name">Seedhe Maut</h4>
+              <p id="mpop-track-artist">Hard hitting energy</p>
+            </div>
+          </a>
+          <a class="mpop-listen-btn" id="mpop-open-link" href="https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            Listen on Spotify ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Resume -->
+      <div class="social-item hide-mobile">
+        <a href="Resume.pdf" download class="resume-dl-btn">⬇ Resume</a>
+        <svg class="scribble-svg" viewBox="0 0 80 12" preserveAspectRatio="none">
+          <path class="scribble-path" d="M2,9 C12,3 22,11 32,5 C42,0 52,10 62,4 C70,0 75,8 78,6"/>
+        </svg>
+      </div>
+
+      <!-- X/Twitter -->
+      <div class="social-item hide-mobile">
+        <a href="https://x.com/AashishPan13357" target="_blank" title="X / Twitter" style="font-weight:700;font-size:1.1rem;">𝕏</a>
+        <svg class="scribble-svg" viewBox="0 0 30 12" preserveAspectRatio="none">
+          <path class="scribble-path" d="M2,8 C8,2 14,10 20,5 C24,2 27,9 28,7"/>
+        </svg>
+      </div>
+
+      <!-- GitHub -->
+      <div class="social-item hide-mobile">
+        <a href="https://github.com/neural-aashish" target="_blank" title="GitHub">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <svg class="scribble-svg" viewBox="0 0 30 12" preserveAspectRatio="none">
+          <path class="scribble-path" d="M2,9 C7,3 13,11 19,5 C23,1 27,8 28,6"/>
+        </svg>
+      </div>
+
+      <!-- LinkedIn -->
+      <div class="social-item hide-mobile">
+        <a href="https://linkedin.com/in/aashish-pandey-948b0536b" target="_blank" title="LinkedIn" style="font-family:serif;font-weight:900;font-size:1.1rem;">in</a>
+        <svg class="scribble-svg" viewBox="0 0 25 12" preserveAspectRatio="none">
+          <path class="scribble-path" d="M2,8 C7,2 12,10 17,5 C21,1 23,8 23,7"/>
+        </svg>
+      </div>
+
+      <!-- Instagram -->
+      <div class="social-item hide-mobile">
+        <a href="https://instagram.com/retarded_dv" target="_blank" title="Instagram">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <svg class="scribble-svg" viewBox="0 0 30 12" preserveAspectRatio="none">
+          <path class="scribble-path" d="M2,9 C8,3 14,11 20,5 C25,0 27,9 28,7"/>
+        </svg>
+      </div>
+
     </div>
     <div class="clock">
       <div id="clock-time">--:-- <sup></sup></div>
@@ -558,6 +678,16 @@ body.hareya{background:#fffbf0;}
     <span class="tag tag-blue">🌐 Full Stack</span>
     <span class="tag tag-orange">🚀 Builder</span>
   </div>
+
+  <!-- Moving tilt tiles -->
+  <div class="about-tiles" id="aboutTiles">
+    <div class="about-tile at-1" data-tilt><span>⚡</span><span>React</span></div>
+    <div class="about-tile at-2" data-tilt><span>🤖</span><span>AI / ML</span></div>
+    <div class="about-tile at-3" data-tilt><span>🏆</span><span>Hackathons</span></div>
+    <div class="about-tile at-4" data-tilt><span>🔥</span><span>Builder</span></div>
+    <div class="about-tile at-5" data-tilt><span>🌐</span><span>Full Stack</span></div>
+    <div class="about-tile at-6" data-tilt><span>🎓</span><span>B.Tech CSE</span></div>
+  </div>
 </section>
 
 <!-- ══ STATS ══ -->
@@ -582,8 +712,6 @@ body.hareya{background:#fffbf0;}
   <h2 class="section-title">Experience</h2>
   <p style="color:var(--gray);font-size:0.85rem;margin-bottom:28px;">Hover over a card to see what I learned ✦</p>
   <div class="exp-cards-wrapper">
-
-    <!-- CARD 1 -->
     <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-front" style="background-image:url('https://images.unsplash.com/photo-1620121692029-d088224ddc74?w=500&q=80');">
@@ -609,8 +737,6 @@ body.hareya{background:#fffbf0;}
         </div>
       </div>
     </div>
-
-    <!-- CARD 2 -->
     <div class="flip-card">
       <div class="flip-card-inner">
         <div class="flip-front" style="background-image:url('https://images.unsplash.com/photo-1557682224-5b8590cd9ec5?w=500&q=80');">
@@ -636,8 +762,6 @@ body.hareya{background:#fffbf0;}
         </div>
       </div>
     </div>
-
-    <!-- CARD 3 — HACKATHONS -->
     <div class="flip-card" style="min-width:420px;">
       <div class="flip-card-inner">
         <div class="flip-front" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
@@ -664,7 +788,6 @@ body.hareya{background:#fffbf0;}
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -683,24 +806,25 @@ body.hareya{background:#fffbf0;}
 
 <!-- ══ PROJECTS ══ -->
 <section id="projects" class="fade-in">
+  <canvas id="dotCanvas"></canvas>
   <div class="section-label">WORK</div>
   <h2 class="section-title">Projects</h2>
   <div class="projects-grid" id="projectsGrid">
-    <a class="project-card" href="https://github.com/neural-aashish" target="_blank">
+    <a class="project-card" href="https://github.com/neural-aashish/Pose-coach" target="_blank">
       <div class="project-icon" style="background:#6c63ff;">🧘</div>
-      <div class="project-info"><h3>Pose Coach</h3><span class="project-url">github.com/neural-aashish</span></div>
+      <div class="project-info"><h3>Pose Coach</h3><span class="project-url">Here you go!!</span></div>
     </a>
-    <a class="project-card" href="#" onclick="return false;">
+    <a class="project-card" href="https://github.com/neural-aashish/Puzzle-game" target="_blank">
       <div class="project-icon" style="background:#1a1a2e;">🧩</div>
-      <div class="project-info"><h3>Puzzle Game</h3><span class="project-url">Link coming soon</span></div>
+      <div class="project-info"><h3>Puzzle Game</h3><span class="project-url">Here you go!!</span></div>
     </a>
     <a class="project-card" href="#">
       <div class="project-icon" style="background:#0a0a0a;">💼</div>
-      <div class="project-info"><h3>Portfolio</h3><span class="project-url">You're here!</span></div>
+      <div class="project-info"><h3>Portfolio</h3><span class="project-url">You're here only!</span></div>
     </a>
-    <a class="project-card extra" href="#" onclick="return false;" style="display:none;">
+    <a class="project-card extra" href="https://github.com/neural-aashish/fruit-ninja" target="_blank" style="display:none;">
       <div class="project-icon" style="background:#c0392b;">🍉</div>
-      <div class="project-info"><h3>Fruit Ninja Game</h3><span class="project-url">Link coming soon</span></div>
+      <div class="project-info"><h3>Fruit Ninja Game</h3><span class="project-url">Here you go!!</span></div>
     </a>
   </div>
   <button class="load-more-btn" onclick="loadMore()">⊕ Load More</button>
@@ -739,14 +863,10 @@ body.hareya{background:#fffbf0;}
   </div>
   <div style="color:#888;font-size:0.8rem;margin-bottom:16px;">Connect with me on:</div>
   <div class="footer-social">
-    <a href="https://github.com/neural-aashish" target="_blank">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-    </a>
+    <a href="https://github.com/neural-aashish" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
     <a href="https://linkedin.com/in/aashish-pandey-948b0536b" target="_blank" style="font-family:serif;font-weight:900;font-size:1.1rem;">in</a>
     <a href="https://x.com/AashishPan13357" target="_blank" style="font-weight:700;font-size:1.1rem;">𝕏</a>
-    <a href="https://instagram.com/retarded_dv" target="_blank">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-    </a>
+    <a href="https://instagram.com/retarded_dv" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
     <a href="mailto:pandeyaashish603@gmail.com" style="font-size:1.1rem;">✉️</a>
   </div>
   <div class="footer-marquee">
@@ -758,24 +878,30 @@ body.hareya{background:#fffbf0;}
 
 <!-- ══ BOTTOM NAV ══ -->
 <nav class="bottom-nav">
-  <button class="nav-home-btn" onclick="navTo(event,'home','Home')">⌂</button>
+  <button class="nav-home-btn" onclick="navTo(event,'home','Home')">
+    <div class="nav-btn-bg"></div>
+    <span style="position:relative;z-index:1;">⌂</span>
+  </button>
   <div class="nav-links">
-    <button class="nav-link" onclick="navTo(event,'about','About')">About</button>
-    <button class="nav-link" onclick="navTo(event,'projects','Projects')">Projects</button>
-    <button class="nav-link" onclick="navTo(event,'experience','Experience')">Experience</button>
-    <button class="nav-link" onclick="navTo(event,'coffee','Buy Coffee')">Buy Coffee</button>
+    <button class="nav-link" data-section="about" onclick="navTo(event,'about','About')">About</button>
+    <button class="nav-link" data-section="projects" onclick="navTo(event,'projects','Projects')">Projects</button>
+    <button class="nav-link" data-section="experience" onclick="navTo(event,'experience','Experience')">Experience</button>
+    <button class="nav-link" data-section="coffee" onclick="navTo(event,'coffee','Buy Coffee')">Buy Coffee</button>
   </div>
   <button class="nav-cta" onclick="openContact()">Let's talk →</button>
 </nav>
 
 <script>
+// ── EMAILJS ──
+emailjs.init("QcZT8jumDnqdWdCs5");
+
 // ── CURSOR ──
 const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top  = e.clientY + 'px';
 });
-document.querySelectorAll('a,button,.project-card,.flip-card').forEach(el => {
+document.querySelectorAll('a,button,.project-card,.flip-card,.about-tile').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('big'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
 });
@@ -803,7 +929,7 @@ document.addEventListener('click', e => {
   setTimeout(() => r.remove(), 600);
 });
 
-// ── NAV CURTAIN TRANSITION ──
+// ══ NAV CURTAIN TRANSITION (FIXED) ══
 const curtain = document.getElementById('nav-curtain');
 const curtainLabel = document.getElementById('curtain-label');
 let _transitioning = false;
@@ -813,36 +939,41 @@ function navTo(e, id, label) {
   if (_transitioning) return;
   _transitioning = true;
 
-
-  // Step 1: slide curtain UP from bottom (covers screen)
   curtainLabel.textContent = label;
-  curtain.style.transition = 'clip-path 0.52s cubic-bezier(0.76,0,0.24,1)';
-  curtain.style.clipPath = 'inset(100% 0 0 0)';
   curtain.classList.remove('slide-out');
-  curtain.classList.add('slide-in');
+  // Force reflow
+  curtain.offsetHeight;
+  curtain.style.clipPath = 'inset(100% 0 0 0)';
+  curtain.style.transition = 'clip-path 0.52s cubic-bezier(0.76,0,0.24,1)';
 
-  // Step 2: when fully covered, scroll + show label
+  // Step 1: slide in from bottom
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      curtain.style.clipPath = 'inset(0% 0 0 0)';
+      curtain.style.pointerEvents = 'all';
+      curtainLabel.style.opacity = '0';
+      setTimeout(() => { curtainLabel.style.opacity = '1'; }, 150);
+    });
+  });
+
   setTimeout(() => {
+    // Step 2: scroll to section
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView();
-    // curtain label already visible via CSS
+    if (el) el.scrollIntoView({ behavior: 'instant' });
 
-    // Step 3: after showing label, slide curtain UP to reveal page
+    // Step 3: slide out upward
     setTimeout(() => {
-      curtain.classList.remove('slide-in');
-      curtain.classList.add('slide-out');
+      curtainLabel.style.opacity = '0';
       curtain.style.transition = 'clip-path 0.5s cubic-bezier(0.76,0,0.24,1)';
       curtain.style.clipPath = 'inset(0 0 100% 0)';
+      curtain.style.pointerEvents = 'none';
       setTimeout(() => {
-        curtain.classList.remove('slide-out');
         curtain.style.clipPath = 'inset(100% 0 0 0)';
         _transitioning = false;
       }, 520);
-    }, 500);
+    }, 480);
+  }, 540);
 
-  }, 520);
-
-  // highlight nav link
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
 }
 
@@ -856,7 +987,7 @@ function updateClock() {
 }
 updateClock(); setInterval(updateClock, 1000);
 
-// ── HERO NAME LETTERS ──
+// ── HERO NAME ──
 'AASHISH'.split('').forEach(ch => {
   const s = document.createElement('span');
   s.className = 'name-letter'; s.textContent = ch;
@@ -888,25 +1019,62 @@ function speakName() {
   speechSynthesis.speak(u);
 }
 
-// ── MUSIC ──
-function openMusic()  { document.getElementById('musicModal').classList.add('show'); }
-function closeMusic() {
-  document.getElementById('musicModal').classList.remove('show');
-  document.getElementById('spotifyArea').classList.remove('show');
-}
-document.getElementById('musicModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('musicModal')) closeMusic();
-});
-function setSpotify(embed, open) {
-  document.getElementById('spotifyFrame').src = embed;
-  document.getElementById('spotifyOpenLink').href = open;
-  document.getElementById('spotifyArea').classList.add('show');
-}
-function playLofi()   { document.body.classList.remove('hareya'); setSpotify('https://open.spotify.com/embed/playlist/37i9dQZF1DWWQRwui0ExPn?utm_source=generator&theme=0','https://open.spotify.com/playlist/37i9dQZF1DWWQRwui0ExPn'); }
-function playKhatta() { document.body.classList.remove('hareya'); setSpotify('https://open.spotify.com/embed/track/1DkqQLqtqFSL0GbVH4j2t3?utm_source=generator&theme=0','https://open.spotify.com/track/1DkqQLqtqFSL0GbVH4j2t3'); }
-function playHareya() { document.body.classList.add('hareya');    setSpotify('https://open.spotify.com/embed/track/3EaH0xOLCAVzJw4jHj2gT1?utm_source=generator&theme=0','https://open.spotify.com/track/3EaH0xOLCAVzJw4jHj2gT1'); }
+// ══ MUSIC POPUP ══
+const playlists = {
+  seedhe: {
+    name: 'Seedhe Maut',
+    artist: 'Hard hitting energy',
+    emoji: '🎤',
+    bg: 'linear-gradient(135deg,#1a1a2e,#6c63ff)',
+    url: 'https://open.spotify.com/playlist/03ZVfdQwRN7ITbNYsQN2l7'
+  },
+  romantic: {
+    name: 'Romantic Vibes',
+    artist: 'Feel it deeply ❤️',
+    emoji: '🎸',
+    bg: 'linear-gradient(135deg,#ff758c,#ff7eb3)',
+    url: 'https://open.spotify.com/playlist/0zc6Hq9OIAengtGG6a3lfs'
+  },
+  chatpate: {
+    name: 'Chatpate',
+    artist: 'Desi energy hits',
+    emoji: '🌶️',
+    bg: 'linear-gradient(135deg,#f5a623,#e74c3c)',
+    url: 'https://open.spotify.com/playlist/1DatcBStkkmYNY6KKvPbv4'
+  }
+};
 
-// ── CONTACT SLIDE-UP ──
+let currentTab = 'seedhe';
+let musicOpen = false;
+
+function toggleMusicPopup() {
+  musicOpen = !musicOpen;
+  document.getElementById('musicPopup').classList.toggle('open', musicOpen);
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  const pl = playlists[tab];
+  document.getElementById('mpop-track-name').textContent = pl.name;
+  document.getElementById('mpop-track-artist').textContent = pl.artist;
+  document.getElementById('mpop-thumb').style.background = pl.bg;
+  document.getElementById('mpop-thumb').textContent = pl.emoji;
+  document.getElementById('mpop-track-link').href = pl.url;
+  document.getElementById('mpop-open-link').href = pl.url;
+  document.querySelectorAll('.mpop-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// Close popup when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.music-popup-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    musicOpen = false;
+    document.getElementById('musicPopup').classList.remove('open');
+  }
+});
+
+// ── CONTACT ──
 function openContact() {
   document.getElementById('contactSlide').classList.add('open');
   document.getElementById('contactOverlay').classList.add('show');
@@ -927,11 +1095,10 @@ function genCaptcha() {
   document.getElementById('captchaQ').textContent = `${_ca} ${op} ${_cb} = ?`;
   document.getElementById('captchaAns').value = '';
   document.getElementById('cfError').style.display = 'none';
-  // store answer
   window._captchaAnswer = op === '+' ? _ca+_cb : _ca*_cb;
 }
 
-// ── SEND CONTACT via mailto ──
+// ── SEND CONTACT via EmailJS ──
 function sendContact() {
   const name  = document.getElementById('cf-name').value.trim();
   const email = document.getElementById('cf-email').value.trim();
@@ -949,46 +1116,31 @@ function sendContact() {
 
   const btn = document.getElementById('cfSubmitBtn');
   btn.disabled = true;
-  btn.textContent = 'Opening mail...';
+  btn.textContent = 'Sending...';
 
-  const subject = encodeURIComponent(`[Portfolio] ${topic||'Message'} — from ${name}`);
-  const body    = encodeURIComponent(
-`Hello Aashish,
-
-You received a new message from your portfolio contact form.
-
-━━━━━━━━━━━━━━━━━━━━━━
-Name:    ${name}
-Email:   ${email}
-Topic:   ${topic||'Not specified'}
-━━━━━━━━━━━━━━━━━━━━━━
-
-Message:
-${msg}
-
-━━━━━━━━━━━━━━━━━━━━━━
-Sent via your portfolio at aashishpandey.dev`
-  );
-
-  // Open default mail client with pre-filled email to Aashish
-  window.location.href = `mailto:pandeyaashish603@gmail.com?subject=${subject}&body=${body}`;
-
-  setTimeout(() => {
-    const succ = document.getElementById('cfSuccess');
-    succ.style.display = 'block';
-    btn.disabled = false;
-    btn.textContent = 'Send Message →';
-    // clear form
+  emailjs.send("service_ki1ac6n", "template_9at3buf", {
+    from_name: name,
+    from_email: email,
+    message: `Topic: ${topic||'Not specified'}\n\n${msg}`
+  }).then(() => {
+    document.getElementById('cfSuccess').style.display = 'block';
     ['cf-name','cf-email','cf-msg'].forEach(id => document.getElementById(id).value='');
     document.getElementById('cf-topic').value='';
     genCaptcha();
-    setTimeout(() => succ.style.display='none', 5000);
-  }, 1200);
+    btn.disabled = false;
+    btn.textContent = 'Send Message →';
+    setTimeout(() => document.getElementById('cfSuccess').style.display='none', 5000);
+  }).catch(err => {
+    console.error(err);
+    alert('Mail bhejne me error aa gaya 😓');
+    btn.disabled = false;
+    btn.textContent = 'Send Message →';
+  });
 }
 
 // ── LOAD MORE ──
 function loadMore() {
-  document.querySelectorAll('.project-card.extra').forEach(el=>el.style.display='flex');
+  document.querySelectorAll('.project-card.extra').forEach(el => el.style.display='flex');
   document.querySelector('.load-more-btn').style.display='none';
 }
 
@@ -1014,7 +1166,7 @@ const supporters=[
   {name:'Dev A',count:2,msg:'Love the AI work 🤖',time:'1h ago',color:'#8b5cf6'},
   {name:'Someone',count:1,msg:'',time:'2h ago',color:'#94a3b8'},
 ];
-document.getElementById('supportersFeed').innerHTML = supporters.map((s,i)=>`
+document.getElementById('supportersFeed').innerHTML = supporters.map(s=>`
   <div class="supporter-item">
     <div class="supporter-avatar" style="background:${s.color}">${s.name.substring(0,2).toUpperCase()}</div>
     <div>
@@ -1029,40 +1181,77 @@ const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:0.08});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
-// 🔥 EmailJS init (yaha apna PUBLIC KEY daal)
-emailjs.init("QcZT8jumDnqdWdCs5");
 
-function sendContact(){
+// ══ TILT TILES for About section ══
+document.querySelectorAll('[data-tilt]').forEach(tile => {
+  tile.addEventListener('mousemove', e => {
+    const rect = tile.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const dx = (e.clientX - cx) / (rect.width/2);
+    const dy = (e.clientY - cy) / (rect.height/2);
+    const rotX = -dy * 18;
+    const rotY = dx * 18;
+    tile.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.08)`;
+    tile.style.boxShadow = `${-dx*12}px ${-dy*12}px 32px rgba(0,0,0,0.15)`;
+  });
+  tile.addEventListener('mouseleave', () => {
+    tile.style.transform = 'perspective(600px) rotateX(0) rotateY(0) scale(1)';
+    tile.style.boxShadow = 'none';
+    tile.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease';
+  });
+  tile.addEventListener('mouseenter', () => {
+    tile.style.transition = 'none';
+  });
+});
 
-  const name = document.getElementById("cf-name").value;
-  const email = document.getElementById("cf-email").value;
-  const message = document.getElementById("cf-msg").value;
+// ══ FLOATING DOTS going upward in Projects ══
+(function initDots(){
+  const canvas = document.getElementById('dotCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const section = document.getElementById('projects');
 
-  if(!name || !email || !message){
-    alert("Bhai sab fill kar pehle 😒");
-    return;
+  function resize() {
+    canvas.width = section.offsetWidth;
+    canvas.height = section.offsetHeight;
   }
+  resize();
+  window.addEventListener('resize', resize);
 
-  const params = {
-    from_name: name,
-    from_email: email,
-    message: message
-  };
+  const COLORS = ['#f5a623','#9b59b6','#2ecc71','#3b82f6','#e91e8c','#0a0a0a'];
+  const dots = Array.from({length:55}, () => ({
+    x: Math.random() * (canvas.width || 800),
+    y: Math.random() * (canvas.height || 600),
+    r: Math.random() * 3.5 + 1.2,
+    speed: Math.random() * 0.7 + 0.2,
+    opacity: Math.random() * 0.5 + 0.15,
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: (Math.random()-0.5) * 0.02,
+  }));
 
-  emailjs.send("service_ki1ac6n", "template_9at3buf", params)
-    .then(() => {
-      document.getElementById("cfSuccess").style.display = "block";
-
-      // form reset
-      document.getElementById("cf-name").value = "";
-      document.getElementById("cf-email").value = "";
-      document.getElementById("cf-msg").value = "";
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("Mail bhejne me error aa gaya 😓");
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dots.forEach(d => {
+      d.y -= d.speed;
+      d.wobble += d.wobbleSpeed;
+      d.x += Math.sin(d.wobble) * 0.4;
+      if (d.y < -10) {
+        d.y = canvas.height + 10;
+        d.x = Math.random() * canvas.width;
+      }
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+      ctx.fillStyle = d.color;
+      ctx.globalAlpha = d.opacity;
+      ctx.fill();
     });
-}
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
 </script>
 </body>
 </html>
