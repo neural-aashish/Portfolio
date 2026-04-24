@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aashish Pandey — Portfolio</title>
@@ -378,11 +379,14 @@ body.hareya{background:#fffbf0;}
   .flip-card{min-width:300px;}
 }
 </style>
+<link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
 
 <div id="cursor"></div>
-
+<div id="nav-curtain">
+  <div id="curtain-label"></div>
+</div>
 <!-- ══ BLACK CURTAIN TRANSITION ══ -->
 <div id="nav-curtain">
   <div id="curtain-label"></div>
@@ -754,12 +758,12 @@ body.hareya{background:#fffbf0;}
 
 <!-- ══ BOTTOM NAV ══ -->
 <nav class="bottom-nav">
-  <button class="nav-home-btn" onclick="navTo(null,'home','Home')">⌂</button>
+  <button class="nav-home-btn" onclick="navTo(event,'home','Home')">⌂</button>
   <div class="nav-links">
-    <button class="nav-link" onclick="navTo(null,'about','About')">About</button>
-    <button class="nav-link" onclick="navTo(null,'projects','Projects')">Projects</button>
-    <button class="nav-link" onclick="navTo(null,'experience','Experience')">Experience</button>
-    <button class="nav-link" onclick="navTo(null,'coffee','Buy Coffee')">Buy Coffee</button>
+    <button class="nav-link" onclick="navTo(event,'about','About')">About</button>
+    <button class="nav-link" onclick="navTo(event,'projects','Projects')">Projects</button>
+    <button class="nav-link" onclick="navTo(event,'experience','Experience')">Experience</button>
+    <button class="nav-link" onclick="navTo(event,'coffee','Buy Coffee')">Buy Coffee</button>
   </div>
   <button class="nav-cta" onclick="openContact()">Let's talk →</button>
 </nav>
@@ -808,6 +812,7 @@ function navTo(e, id, label) {
   if (e) e.preventDefault();
   if (_transitioning) return;
   _transitioning = true;
+
 
   // Step 1: slide curtain UP from bottom (covers screen)
   curtainLabel.textContent = label;
@@ -1024,6 +1029,40 @@ const obs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:0.08});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+// 🔥 EmailJS init (yaha apna PUBLIC KEY daal)
+emailjs.init("QcZT8jumDnqdWdCs5");
+
+function sendContact(){
+
+  const name = document.getElementById("cf-name").value;
+  const email = document.getElementById("cf-email").value;
+  const message = document.getElementById("cf-msg").value;
+
+  if(!name || !email || !message){
+    alert("Bhai sab fill kar pehle 😒");
+    return;
+  }
+
+  const params = {
+    from_name: name,
+    from_email: email,
+    message: message
+  };
+
+  emailjs.send("service_ki1ac6n", "template_9at3buf", params)
+    .then(() => {
+      document.getElementById("cfSuccess").style.display = "block";
+
+      // form reset
+      document.getElementById("cf-name").value = "";
+      document.getElementById("cf-email").value = "";
+      document.getElementById("cf-msg").value = "";
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Mail bhejne me error aa gaya 😓");
+    });
+}
 </script>
 </body>
 </html>
