@@ -1,4 +1,5 @@
-
+// ── EMAILJS INIT ──
+emailjs.init("QcZT8jumDnqdWdCs5");
 
 // ── CURSOR ──
 const cursor = document.getElementById('cursor');
